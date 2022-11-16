@@ -6,7 +6,7 @@
  * Data da criação: Monday, November 14th 2022, 1:31:07 pm
  * Autor: Giovanne Oliveira
  * -----
- * Ultima edição: Mon Nov 14 2022
+ * Ultima edição: Wed Nov 16 2022
  * Editado por: Giovanne Oliveira
  * -----
  * Copyright (c) 2022 Plataforma Medico Online - JVM Serviços Médicos Ltda
@@ -25,10 +25,13 @@ use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
+
 $log = new Logger('jibri_uploader');
 $log->pushHandler(new StreamHandler('logs/jibri_uploader.log', \Monolog\Logger::DEBUG));
-$log->pushHandler(new \Monolog\Handler\LogglyHandler('25ea780c-5b1b-4d0f-b6be-6739e6f4b163/tag/monolog', \Monolog\Logger::DEBUG));
-$log->pushHandler(new \Monolog\Handler\SlackWebhookHandler('https://hooks.slack.com/services/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', \Monolog\Logger::ERROR));
+$log->pushHandler(new \Monolog\Handler\LogglyHandler($_ENV['LOGGLY_KEY'], \Monolog\Logger::DEBUG));
+$log->pushHandler(new \Monolog\Handler\SlackWebhookHandler($_ENV['SLACK_WEBHOOK_URL'], \Monolog\Logger::ERROR));
 
 $log->info('Jibri Uploader started', ['args' => $argv]);
 
