@@ -25,11 +25,14 @@ use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+$logglyKey = $_ENV['LOGGLY_KEY'] ?? '';
+$slackWebhook = $_ENV['SLACK_WEBHOOK_URL'] ?? '';
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
 $log = new Logger('jibri_uploader');
-$log->pushHandler(new StreamHandler('logs/jibri_uploader.log', \Monolog\Logger::DEBUG));
+$log->pushHandler(new StreamHandler(__DIR__.'/logs/jibri_uploader.log', \Monolog\Logger::DEBUG));
 $log->pushHandler(new \Monolog\Handler\LogglyHandler($_ENV['LOGGLY_KEY'], \Monolog\Logger::DEBUG));
 $log->pushHandler(new \Monolog\Handler\SlackWebhookHandler($_ENV['SLACK_WEBHOOK_URL'], \Monolog\Logger::ERROR));
 
